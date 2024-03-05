@@ -5,7 +5,7 @@ import {
   NestMiddleware,
 } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
-import { Note } from 'src/notes/interfaces/note.interface';
+import { Note } from 'src/notes/note.entity';
 import { NotesService } from 'src/notes/notes.service';
 
 // temp fix?
@@ -22,7 +22,7 @@ export class NotesMiddleware implements NestMiddleware {
 
     const note = await this.notesService.findByPk(parsedId);
     if (!note) {
-      throw new HttpException('!Note', HttpStatus.NOT_FOUND);
+      throw new HttpException('Note does not exist', HttpStatus.NOT_FOUND);
       // return res
       //   .status(HttpStatus.NOT_FOUND)
       //   .send({ message: 'Note does not exist' });

@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  postgres:
+    container_name: 'nest_dev_db'
+    image: postgres
+    ports:
+      - target: 5432
+        published: 5000
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: root
+      POSTGRES_DB: dev_db
+    volumes:
+      - ./pg_database:/var/lib/postgresql/data

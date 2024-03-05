@@ -1,30 +1,29 @@
 import { Injectable } from '@nestjs/common';
-import { Comment } from './interfaces/comment.interface';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Comment } from './comment.entity';
+import { Repository } from 'typeorm';
+import { Note } from 'src/notes/note.entity';
 
 @Injectable()
 export class CommentsService {
-  private readonly comments: Comment[] = [];
+  constructor(
+    @InjectRepository(Comment)
+    private commentsRepository: Repository<Comment>,
+  ) {}
 
-  async findAllByNote(noteId: number) {
-    return this.comments.filter((comment) => comment.noteId === noteId);
+  async findAllByNote(note: Note) {
+    return this.commentsRepository.find({
+      where: { note: { id: note.id } },
+    });
   }
 
-  async findByPk(id: number): Promise<Comment | undefined> {
-    return this.comments.find((comment) => comment.id === id);
-  }
+  async create(note: Note, createCommentDto: CreateCommentDto) {
+    const comment = this.commentsRepository.create({
+      ...createCommentDto,
+      note,
+    });
 
-  async create(noteId: number, createCommentDto: CreateCommentDto) {
-    const parsedContent = createCommentDto.content;
-
-    const comment: Comment = {
-      id: this.comments.length + 1,
-      content: parsedContent,
-      createdAt: new Date(),
-      noteId,
-    };
-
-    this.comments.push(comment);
-    return comment;
+    return await this.commentsRepository.save(comment);
   }
 }

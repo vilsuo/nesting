@@ -1,36 +1,41 @@
 import { Injectable } from '@nestjs/common';
-import { Note } from './interfaces/note.interface';
 import { CreateNoteDto } from './dto/create-note.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Note } from './note.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class NotesService {
-  private notes: Note[] = [];
+  constructor(
+    @InjectRepository(Note)
+    private notesRepository: Repository<Note>,
+  ) {}
 
   async findAll(): Promise<Note[]> {
-    return this.notes;
+    return this.notesRepository.find();
   }
 
-  async findByPk(id: number): Promise<Note | undefined> {
-    return this.notes.find((note) => note.id === id);
+  async findByPk(id: number): Promise<Note | null> {
+    return this.notesRepository.findOneBy({ id });
   }
 
   async create(createNoteDto: CreateNoteDto): Promise<Note> {
-    const parsedContent = createNoteDto.content;
-
-    const note: Note = {
-      id: this.notes.length + 1,
-      content: parsedContent,
-      createdAt: new Date(),
-      views: 0,
-    };
-
-    this.notes.push(note);
-    return note;
+    const note = this.notesRepository.create(createNoteDto);
+    return await this.notesRepository.save(note);
   }
 
-  async view(note: Note) {
-    note.views = note.views + 1;
-    this.notes = this.notes.map((n) => (n.id === note.id ? note : n));
-    return note;
+  async view(id: number) {
+    await this.notesRepository.increment({ id }, 'views', 1);
+    return await this.findByPk(id);
+
+    /*
+    return await this.notesRepository
+      .createQueryBuilder()
+      .update(Note)
+      .set({ views: () => 'views + 1' })
+      .where('id = :id', { id })
+      .returning('*')
+      .execute();
+    */
   }
 }
