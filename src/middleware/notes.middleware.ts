@@ -18,7 +18,7 @@ export class NotesMiddleware implements NestMiddleware {
   constructor(private readonly notesService: NotesService) {}
 
   async use(req: NoteRequest, res: Response, next: NextFunction) {
-    const parsedId = Number(req.params.id);
+    const parsedId = Number(req.params.noteId);
 
     const note = await this.notesService.findByPk(parsedId);
     if (!note) {

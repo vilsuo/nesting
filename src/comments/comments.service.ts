@@ -6,8 +6,12 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 export class CommentsService {
   private readonly comments: Comment[] = [];
 
-  async findAll(noteId: number) {
+  async findAllByNote(noteId: number) {
     return this.comments.filter((comment) => comment.noteId === noteId);
+  }
+
+  async findByPk(id: number): Promise<Comment | undefined> {
+    return this.comments.find((comment) => comment.id === id);
   }
 
   async create(noteId: number, createCommentDto: CreateCommentDto) {
