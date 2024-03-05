@@ -1,17 +1,10 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpStatus,
-  Param,
-  Post,
-  Res,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { NotesService } from './notes.service';
-import { Response } from 'express';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { CommentsService } from 'src/comments/comments.service';
 import { CreateCommentDto } from 'src/comments/dto/create-comment.dto';
+import { Note } from 'src/decorators/note.decorator';
+import { Note as NoteEntity } from './interfaces/note.interface';
 
 @Controller('notes')
 export class NotesController {
@@ -35,34 +28,15 @@ export class NotesController {
   }
 
   @Get(':id')
-  async findOne(
-    @Param() params: { id: string },
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    const parsedId = Number(params.id);
-    const note = await this.notesService.findByPk(parsedId);
-    if (!note) {
-      res.status(HttpStatus.NOT_FOUND);
-      return { message: 'Note does not exist' };
-    }
+  async findOne(@Note() note: NoteEntity) {
     return note;
   }
 
   @Post(':id/comments')
   async createComment(
-    @Param() params: { id: string },
+    @Note() note: NoteEntity,
     @Body() body: CreateCommentDto,
-    @Res({ passthrough: true }) res: Response,
   ) {
-    // find the Note
-    const parsedId = Number(params.id);
-    const note = await this.notesService.findByPk(parsedId);
-    if (!note) {
-      res.status(HttpStatus.NOT_FOUND);
-      return { message: 'Note does not exist' };
-    }
-
-    // create the Comment
     const parsedContent = body.content;
     const comment = await this.commentsService.create(note.id, {
       content: parsedContent,
@@ -72,18 +46,7 @@ export class NotesController {
   }
 
   @Get(':id/comments')
-  async getComments(
-    @Param() params: { id: string },
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    // find the Note
-    const parsedId = Number(params.id);
-    const note = await this.notesService.findByPk(parsedId);
-    if (!note) {
-      res.status(HttpStatus.NOT_FOUND);
-      return { message: 'Note does not exist' };
-    }
-
+  async getComments(@Note() note: NoteEntity) {
     // find the Note Comments
     return await this.commentsService.findAll(note.id);
   }
