@@ -25,6 +25,6 @@ export class NotesController {
 
   @Get(':noteId')
   async findOne(@Note() note: NoteEntity) {
-    return note;
+    return this.notesService.view(note);
   }
 }

@@ -4,7 +4,7 @@ import { CreateNoteDto } from './dto/create-note.dto';
 
 @Injectable()
 export class NotesService {
-  private readonly notes: Note[] = [];
+  private notes: Note[] = [];
 
   async findAll(): Promise<Note[]> {
     return this.notes;
@@ -25,6 +25,12 @@ export class NotesService {
     };
 
     this.notes.push(note);
+    return note;
+  }
+
+  async view(note: Note) {
+    note.views = note.views + 1;
+    this.notes = this.notes.map((n) => (n.id === note.id ? note : n));
     return note;
   }
 }
