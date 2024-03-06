@@ -13,7 +13,6 @@ export class CommentsController {
     return await this.commentsService.findAllByNote(note);
   }
 
-  // TODO: validate body
   @Post()
   async create(
     @Note() note: NoteEntity,

@@ -13,7 +13,6 @@ export class NotesController {
     return this.notesService.findAll();
   }
 
-  // TODO: validate body
   @Post()
   async create(@Body() createNoteDto: CreateNoteDto) {
     return await this.notesService.create(createNoteDto);
