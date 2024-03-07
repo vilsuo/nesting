@@ -1,22 +1,18 @@
 import { Module } from '@nestjs/common';
 import { NotesModule } from './notes/notes.module';
 import { CommentsModule } from './comments/comments.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Note } from './notes/note.entity';
-import { Comment } from './comments/comment.entity';
+import { ConfigModule } from '@nestjs/config';
+import { configuration } from './config/config';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5000,
-      username: 'root',
-      password: 'root',
-      database: 'dev_db',
-      entities: [Note, Comment],
-      synchronize: true,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.development.env',
+      load: [configuration],
     }),
+    DatabaseModule,
     NotesModule,
     CommentsModule,
   ],
