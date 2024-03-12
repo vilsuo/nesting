@@ -20,6 +20,7 @@ export class NotesController {
 
   @Get(':noteId')
   async findOne(@Note() note: NoteEntity) {
-    return this.notesService.view(note.id);
+    await this.notesService.view(note.id);
+    return this.notesService.findWithComments(note.id);
   }
 }

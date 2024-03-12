@@ -26,7 +26,7 @@ export class NotesService {
 
   async view(id: number) {
     await this.notesRepository.increment({ id }, 'views', 1);
-    return await this.findByPk(id);
+    //return await this.findByPk(id);
 
     /*
     return await this.notesRepository
@@ -37,5 +37,12 @@ export class NotesService {
       .returning('*')
       .execute();
     */
+  }
+
+  async findWithComments(id: number) {
+    return await this.notesRepository.find({
+      where: { id },
+      relations: { comments: true },
+    });
   }
 }
