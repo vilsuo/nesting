@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+  nest:
+    container_name: 'nest_dev'
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=dev_db
+      - DATABASE_USERNAME=root
+      - DATABASE_PASSWORD=root
+    command: npx nest start --watch --preserveWatchOutput
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/usr/src/app
+    depends_on:
+      - db
+
+  db:
+    container_name: 'nest_dev_db'
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_USER=root
+      - POSTGRES_DB=dev_db
+    ports:
+      - 5000:5432
+    volumes:
+      - ./pg_database:/var/lib/postgresql/data
