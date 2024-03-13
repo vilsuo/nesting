@@ -1,9 +1,4 @@
-import {
-  BeforeInsert,
-  Column,
-  CreateDateColumn,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, CreateDateColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 export abstract class Content {
   @PrimaryGeneratedColumn()
@@ -14,11 +9,4 @@ export abstract class Content {
 
   @CreateDateColumn()
   createdAt: Date;
-
-  // TypeORM will call this before the entity is inserted using
-  // repository/manager save.
-  @BeforeInsert()
-  trimContent() {
-    if (this.content) this.content = this.content.trim();
-  }
 }
