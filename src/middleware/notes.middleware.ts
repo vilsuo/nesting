@@ -1,6 +1,7 @@
 import {
   HttpException,
   HttpStatus,
+  Inject,
   Injectable,
   NestMiddleware,
 } from '@nestjs/common';
@@ -15,7 +16,10 @@ interface NoteRequest extends Request {
 
 @Injectable()
 export class NotesMiddleware implements NestMiddleware {
-  constructor(private readonly notesService: NotesService) {}
+  constructor(
+    @Inject('NOTES_SERVICE')
+    private readonly notesService: NotesService,
+  ) {}
 
   async use(req: NoteRequest, res: Response, next: NextFunction) {
     const parsedId = Number(req.params.noteId);

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
 import { NotesService } from './notes.service';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { Note } from '../decorators/note.decorator';
@@ -6,7 +6,10 @@ import { Note as NoteEntity } from './note.entity';
 
 @Controller('notes')
 export class NotesController {
-  constructor(private readonly notesService: NotesService) {}
+  constructor(
+    @Inject('NOTES_SERVICE')
+    private readonly notesService: NotesService,
+  ) {}
 
   @Get()
   async findAll() {

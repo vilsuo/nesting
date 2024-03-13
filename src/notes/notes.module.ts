@@ -8,7 +8,12 @@ import { Note } from './note.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Note])],
   controllers: [NotesController],
-  providers: [NotesService],
+  providers: [
+    {
+      provide: 'NOTES_SERVICE',
+      useClass: NotesService,
+    },
+  ],
 })
 export class NotesModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
