@@ -1,6 +1,6 @@
-import { Comment } from 'src/comments/comment.entity';
-import { Content } from 'src/content.entity';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Comment } from '../comments/comment.entity';
+import { Content } from '../content.entity';
+import { Column, Entity, OneToMany, Repository } from 'typeorm';
 
 @Entity()
 export class Note extends Content {
@@ -10,3 +10,5 @@ export class Note extends Content {
   @OneToMany(() => Comment, (comment) => comment.note)
   comments: Comment[];
 }
+
+export type NotesRepository = Repository<Note>;
