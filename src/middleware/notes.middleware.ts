@@ -6,8 +6,8 @@ import {
   NestMiddleware,
 } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
-import { Note } from 'src/notes/note.entity';
-import { NotesService } from 'src/notes/notes.service';
+import { Note } from '../notes/note.entity';
+import { NotesService } from '../notes/notes.service';
 
 // temp fix?
 interface NoteRequest extends Request {
