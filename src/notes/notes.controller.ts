@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { NotesService } from './notes.service';
 import { CreateNoteDto } from './dto/create-note.dto';
-import { Note } from 'src/decorators/note.decorator';
+import { Note } from '../decorators/note.decorator';
 import { Note as NoteEntity } from './note.entity';
 
 @Controller('notes')
@@ -10,7 +10,7 @@ export class NotesController {
 
   @Get()
   async findAll() {
-    return this.notesService.findAll();
+    return await this.notesService.findAll();
   }
 
   @Post()
@@ -21,6 +21,6 @@ export class NotesController {
   @Get(':noteId')
   async findOne(@Note() note: NoteEntity) {
     await this.notesService.view(note.id);
-    return this.notesService.findWithComments(note.id);
+    return await this.notesService.findWithComments(note.id);
   }
 }

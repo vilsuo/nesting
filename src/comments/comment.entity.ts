@@ -1,5 +1,5 @@
-import { Content } from 'src/content.entity';
-import { Note } from 'src/notes/note.entity';
+import { Content } from '../content.entity';
+import { Note } from '../notes/note.entity';
 import { Entity, ManyToOne } from 'typeorm';
 
 @Entity()
