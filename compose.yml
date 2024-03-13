@@ -16,11 +16,14 @@ services:
       - DATABASE_NAME=dev_db
       - DATABASE_USERNAME=root
       - DATABASE_PASSWORD=root
-    command: npx nest start --watch --preserveWatchOutput
     ports:
       - 3000:3000
     volumes:
-      - ./:/usr/src/app
+      - ./src:/usr/src/app/src
+      # This ensures that the NestJS container manages the node_modules folder
+      # rather than synchronizes it with the host machine
+      #- /usr/src/app/node_modules
+    command: npx nest start --watch --preserveWatchOutput
     depends_on:
       - db
 
