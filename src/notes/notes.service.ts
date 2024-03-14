@@ -39,7 +39,7 @@ export class NotesService {
   }
 
   async findWithComments(id: number) {
-    return await this.notesRepository.find({
+    return await this.notesRepository.findOne({
       where: { id },
       relations: { comments: true },
     });
