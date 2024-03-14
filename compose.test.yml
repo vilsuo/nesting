@@ -1,0 +1,39 @@
+version: '3.9'
+
+services:
+  nest_test:
+    container_name: 'nest_test'
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    environment:
+      - NODE_ENV=test
+      - PORT=3001
+
+      - DATABASE_HOST=db_test
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=test_db
+      - DATABASE_USERNAME=root
+      - DATABASE_PASSWORD=root
+    ports:
+      - 3001:3001
+    volumes:
+      - ./src:/usr/src/app/src
+      - ./test:/usr/src/app/test
+      # This ensures that the NestJS container manages the node_modules folder
+      # rather than synchronizes it with the host machine
+      #- /usr/src/app/node_modules
+    command: npx nest start --watch --preserveWatchOutput
+    depends_on:
+      - db_test
+
+  db_test:
+    container_name: 'nest_test_db'
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_USER=root
+      - POSTGRES_DB=test_db
+    ports:
+      - 5001:5432
